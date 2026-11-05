@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 DIGEST_RE = re.compile(r"@sha256:[0-9a-f]{64}(?![0-9a-f])")
-SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", ".tox"}
+SKIP_DIRS = {".git", ".claude", "node_modules", ".venv", "venv", "__pycache__", ".tox"}
 FROM_RE = re.compile(
     r"^\s*FROM\s+(?:--\S+\s+)*(?P<image>\S+)(?:\s+AS\s+(?P<alias>\S+))?\s*$",
     re.IGNORECASE,

@@ -5,7 +5,7 @@ help:  ## List targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk -F':.*?## ' '{printf "  %-12s %s\n", $$1, $$2}'
 
 sync:  ## Install dev dependencies
-	uv sync --frozen
+	uv sync --frozen --all-packages
 
 test:  ## Run unit tests
 	uv run --frozen pytest
