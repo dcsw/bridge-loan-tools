@@ -1,0 +1,10 @@
+*
+!backend/common
+!backend/ingest/__init__.py
+!backend/ingest/bronze.py
+!backend/ingest/quarantine.py
+!backend/ingest/spark_session.py
+!backend/ingest/smoke.py
+!deploy/docker/ingest/requirements.txt
+**/__pycache__
+**/*.pyc

@@ -20,6 +20,10 @@ include:
 networks:
   core:
     driver: bridge
+  # WU5b: no-egress network for the Spark ingest job; only minio and lakekeeper join it.
+  ingest:
+    driver: bridge
+    internal: true
 
 volumes:
   minio-data:
@@ -50,7 +54,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
-    networks: [core]
+    networks: [core, ingest]
     restart: unless-stopped
 
   postgres:
@@ -99,7 +103,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
-    networks: [core]
+    networks: [core, ingest]
     restart: unless-stopped
 
   bootstrap:

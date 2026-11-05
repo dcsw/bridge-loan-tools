@@ -1,3 +1,41 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# Bronze (Spark) job (WU5b). One-shot, NOT part of `up -d` health:
+#   make ingest-run        (or: docker compose --profile ingest run --rm ingest)
+# Network: only the `ingest` network, which is `internal: true` (defined in compose.yaml next
+# to the other networks). minio and lakekeeper are attached to it as well as to `core`, so this
+# container resolves and reaches exactly those two and has no route to the internet, the cloud
+# metadata IP, postgres or any other service. Spark runs local[*]; Iceberg jars are baked into the
+# image (no runtime package resolution); Lakekeeper vends the S3 credentials, so the job holds no secrets.
+# Input: data/extract-out is mounted read-only. Root FS is read-only; /tmp is a tmpfs.
+
+services:
+  ingest:
+    profiles: [ingest]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/ingest/Dockerfile
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    restart: "no"
+    pids_limit: 512
+    mem_limit: 3g
+    cpus: 2
+    tmpfs:
+      # exec: zstd-jni (Parquet codec) extracts a native .so into /tmp and mmaps it
+      - /tmp:size=1g,mode=1777,nosuid,exec
+    environment:
+      LAKEKEEPER_URI: http://lakekeeper:8181/catalog
+      WAREHOUSE_NAME: bridgeloan
+      AWS_REGION: us-east-1
+      EXTRACT_OUT: /extract-out
+    volumes:
+      - type: bind
+        source: ${EXTRACT_OUT_DIR:-../../data/extract-out}
+        target: /extract-out
+        read_only: true
+    depends_on:
+      lakekeeper:
+        condition: service_healthy
+    networks: [ingest]

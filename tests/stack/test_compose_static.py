@@ -37,7 +37,7 @@ def test_core_services_present_and_in_core_profile_and_network():
     assert SERVICES <= set(services)
     for name in SERVICES:
         assert services[name]["profiles"] == ["core"], name
-        assert list(services[name]["networks"]) == ["core"], name
+        assert "core" in services[name]["networks"], name
     assert _load()["networks"]["core"]["driver"] == "bridge"
 
 

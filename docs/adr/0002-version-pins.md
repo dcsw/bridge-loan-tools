@@ -87,3 +87,35 @@ the deliberate fake key committed in 553e956, now assembled at runtime in the te
   Postgres SQL interface over the same Iceberg tables; it is not on the Phase 1 critical path and
   needs a source build to adopt. Revisit when a prebuilt image exists or if you want Postgres SQL
   access to the semantic view.
+
+## Addendum (WU5b, 2026-11-05): Spark / Iceberg / Java / Python pairing
+Append-only; added by the Bronze unit. The ingest image (`deploy/docker/ingest/Dockerfile`) is the only place
+Spark runs (`local[*]`).
+
+| Component | Pin |
+|---|---|
+| Base image | `eclipse-temurin:17-jre-noble@sha256:8ee89ca3...ff1d` (Java 17, Ubuntu 24.04) |
+| Python | 3.12 (Ubuntu noble `python3`, in `/opt/venv`; matches `requires-python`) |
+| PySpark / Spark | `pyspark==4.0.5` (bundles Spark 4.0.5, Scala 2.13), hash-pinned in `deploy/docker/ingest/requirements.txt` (exported from `uv.lock`, group `spark`) |
+| Iceberg Spark runtime | `iceberg-spark-runtime-4.0_2.13-1.12.0.jar`, sha256 `3f50e93e...8306` |
+| Iceberg AWS bundle | `iceberg-aws-bundle-1.12.0.jar`, sha256 `dd7e49ff...d957` |
+| Catalog | Lakekeeper v0.14.2 REST, `X-Iceberg-Access-Delegation: vended-credentials` |
+
+Jars are downloaded at image build time, verified with `sha256sum -c`, and placed in pyspark's `jars/`
+directory; the job never uses `--packages`/`spark.jars.packages`, so runtime needs no Maven access.
+Spark 4.0 supports Java 17 and Python 3.12; the `-4.0_2.13` runtime artifact is the Iceberg build for
+Spark 4.0/Scala 2.13.
+
+Verified by `tests/ingest/test_ingest_live.py::test_spark_iceberg_smoke_readable_by_pyiceberg_and_duckdb`
+(`RUN_STACK=1`): Spark creates a format-version 2 table through the REST catalog, appends in two commits,
+reads it back; then pyiceberg 0.12.0 (2 snapshots, rows equal) and DuckDB 2.0.0 (`ATTACH ... TYPE ICEBERG`,
+rows equal incl. NULL) read the same Spark-written table. Bronze tables (MERGE INTO, copy-on-write) are
+read back through DuckDB in the same suite.
+
+Operational notes found while verifying:
+- The runtime uid (10001) must have a passwd entry or Hadoop `UserGroupInformation` fails with
+  "invalid null input: name" (and Ivy sees `user.home=?`); the image adds a `ingest` user.
+- The `/tmp` tmpfs needs `exec`: zstd-jni extracts and maps a native `.so` there. It stays `nosuid`,
+  and the container runs non-root, `cap_drop: ALL`, read-only root FS.
+- Network: the job sits only on the `ingest` network (`internal: true`); `minio` and `lakekeeper` are
+  additionally attached to it. Credentials are vended by Lakekeeper, so the container holds no secrets.
