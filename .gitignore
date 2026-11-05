@@ -24,3 +24,9 @@ htmlcov/
 
 # locally installed dev tools
 .tools/
+
+# frontend build artifacts (WU9)
+frontend/dist/
+frontend/dist-mock/
+frontend/test-results/
+frontend/playwright-report/

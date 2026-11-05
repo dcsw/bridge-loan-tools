@@ -1,3 +1,36 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# WU9: static web UI behind the `web` profile (deliberately NOT `core`, so the core stack and the UI can be
+# started independently). Standalone:
+#   docker compose -p bridgeloan-web -f deploy/docker/compose.web.yaml --profile web up -d --wait
+# Published only on 127.0.0.1. v1 limitation (local, single user): the gateway JWT is read by nginx from the
+# container environment (WEB_API_JWT) and injected server-side; it is never in the browser bundle.
+services:
+  web:
+    profiles: [web]
+    build:
+      context: ../../frontend
+      dockerfile: ../deploy/docker/web/Dockerfile
+      additional_contexts:
+        webconf: ./web
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:8080"
+    environment:
+      GATEWAY_UPSTREAM: ${GATEWAY_UPSTREAM:-http://krakend:8080}
+      WEB_API_JWT: ${WEB_API_JWT:-}
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [core]
+    restart: unless-stopped
+
+# Identical to the definition in compose.yaml, so including this file there merges cleanly.
+networks:
+  core:
+    driver: bridge

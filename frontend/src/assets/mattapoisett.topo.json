@@ -1,0 +1,68 @@
+{
+  "arcs": [
+    [
+      [
+        -70.87,
+        41.685
+      ],
+      [
+        -70.82,
+        41.692
+      ],
+      [
+        -70.775,
+        41.685
+      ],
+      [
+        -70.758,
+        41.665
+      ],
+      [
+        -70.768,
+        41.64
+      ],
+      [
+        -70.8,
+        41.626
+      ],
+      [
+        -70.835,
+        41.63
+      ],
+      [
+        -70.862,
+        41.65
+      ],
+      [
+        -70.87,
+        41.685
+      ]
+    ]
+  ],
+  "bbox": [
+    -70.87,
+    41.626,
+    -70.758,
+    41.692
+  ],
+  "objects": {
+    "mattapoisett": {
+      "geometries": [
+        {
+          "arcs": [
+            [
+              0
+            ]
+          ],
+          "id": "mattapoisett",
+          "properties": {
+            "name": "Mattapoisett (placeholder outline)"
+          },
+          "type": "Polygon"
+        }
+      ],
+      "type": "GeometryCollection"
+    }
+  },
+  "type": "Topology"
+}
