@@ -1,3 +1,30 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# Fetcher (WU4). One-shot job, NOT part of `up -d` health:
+#   docker compose --profile ingest run --rm fetcher --urls /work/urls.txt --town <town>
+# The `fetch` network is `internal: true`: no route to core (minio, lakekeeper) or the internet,
+# and no route to the cloud metadata IP. Cross-network hand-off is the host dir data/drop only;
+# `raw-ingest` (make fetcher-ingest) uploads it to MinIO from outside this network.
+# Phase 2 live fetching needs an egress proxy with a domain allow-list (ADR-0003).
+networks:
+  fetch:
+    driver: bridge
+    internal: true
+
+services:
+  fetcher:
+    profiles: [ingest]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/fetcher/Dockerfile
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    environment:
+      # Portal hosts are config, never code (design 3.5). Set in .env / the shell.
+      FETCHER_PORTAL_HOSTS: ${FETCHER_PORTAL_HOSTS:-}
+    volumes:
+      - ../../data/drop:/drop
+    networks: [fetch]

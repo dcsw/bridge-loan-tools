@@ -3,8 +3,15 @@ name = "bridge-loan-fetcher"
 version = "0.1.0"
 description = "bridge-loan-tools fetcher package"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "boto3>=1.43.117",
+    "bridge-loan-common",
+    "playwright>=1.64.1",
+]
 
 [tool.uv]
 # Source-layout skeleton; imported as backend.fetcher via the workspace root, not built.
 package = false
+
+[tool.uv.sources]
+bridge-loan-common = { workspace = true }
