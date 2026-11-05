@@ -1,0 +1,106 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  GITLEAKS_VERSION: v8.30.1
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --frozen
+      - run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --frozen
+      - name: Install pinned gitleaks
+        run: |
+          v="${GITLEAKS_VERSION#v}"
+          base="https://github.com/gitleaks/gitleaks/releases/download/${GITLEAKS_VERSION}"
+          curl -sSfL -O "${base}/gitleaks_${v}_linux_x64.tar.gz"
+          curl -sSfL -O "${base}/gitleaks_${v}_checksums.txt"
+          grep "gitleaks_${v}_linux_x64.tar.gz" "gitleaks_${v}_checksums.txt" | sha256sum -c -
+          sudo tar -xzf "gitleaks_${v}_linux_x64.tar.gz" -C /usr/local/bin gitleaks
+          gitleaks version
+      - run: make test
+
+  pip-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - run: uv sync --frozen
+      - run: uv run --frozen pip-audit
+
+  npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: npm audit (only once frontend exists)
+        run: |
+          if [ -f frontend/package.json ]; then
+            cd frontend && npm audit --audit-level=high
+          else
+            echo "frontend/package.json not present; skipping npm audit"
+          fi
+
+  digest-pins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 scripts/check_image_digests.py .
+
+  dockerfiles:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.find.outputs.matrix }}
+      found: ${{ steps.find.outputs.found }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Find Dockerfiles
+        id: find
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, pathlib
+          files = sorted(
+              str(p) for p in pathlib.Path(".").rglob("*")
+              if p.is_file()
+              and "node_modules" not in p.parts
+              and (p.name == "Dockerfile" or p.name.startswith("Dockerfile.")
+                   or p.name.endswith(".Dockerfile"))
+          )
+          print("found=" + str(bool(files)).lower())
+          print("matrix=" + json.dumps({"dockerfile": files}))
+          PY
+
+  trivy:
+    # Image scan; only runs when Dockerfiles exist.
+    needs: dockerfiles
+    if: needs.dockerfiles.outputs.found == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.dockerfiles.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build image
+        run: docker build -f "${{ matrix.dockerfile }}" -t scan-target:ci "$(dirname "${{ matrix.dockerfile }}")"
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: scan-target:ci
+          severity: HIGH,CRITICAL
+          exit-code: "1"

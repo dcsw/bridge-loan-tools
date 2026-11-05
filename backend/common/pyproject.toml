@@ -1,0 +1,10 @@
+[project]
+name = "bridge-loan-common"
+version = "0.1.0"
+description = "bridge-loan-tools common package"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.uv]
+# Source-layout skeleton; imported as backend.common via the workspace root, not built.
+package = false
