@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "bridge_loan_tools",
+  "project_id": "f8b75207-e835-4ceb-93ea-e70c08678111"
+}
