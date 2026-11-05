@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "f84d8c508ef5a9b3c61f432b0b7f0f245aca4d8932cf5cb3260cdd4d226fc837",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "docling",
+    "extractor_version": "docling==2.148.0+models.b389ac073885",
+    "page_no": 1,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "MORTGAGE Grantor: Christina Cook Grantee: Lee Product Capital LLC Property: 12525 Obrien Squares Suite 947, Mattapoisett, MA Parcel: MATT-11-1 Recorded: November 28, 2024 Book 101 Page 11 Principal: $530,000.00 Term: 18 months SYNTHETIC TEST DOCUMENT - NOT A REAL RECORD"
+  }
+]

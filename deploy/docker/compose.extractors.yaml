@@ -1,3 +1,74 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# Untrusted-PDF extractors (WU5a). One-shot jobs, never part of `up -d`:
+#   make extract EXTRACTOR=pymupdf        (or: docker compose --profile extract run --rm extract-pymupdf)
+# Hand-off is host dirs only: data/extract-in (read-only here) -> data/extract-out/<extractor>.
+# No docker socket, no network (network_mode: none is set in each service definition so it
+# holds under `docker compose run`), no capabilities, read-only root FS, resource limits.
+# Models are baked into the images and HF_HUB_OFFLINE=1, so nothing downloads at runtime.
+# Run as the host user (EXTRACT_UID/EXTRACT_GID, set by make) so output is host-owned.
+
+x-extractor: &extractor
+  network_mode: none
+  read_only: true
+  user: "${EXTRACT_UID:-10001}:${EXTRACT_GID:-10001}"
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: "no"
+  profiles: [extract]
+  pids_limit: 256
+  tmpfs: ["/tmp:size=512m,mode=1777,nosuid"]
+  environment: &extractor-env
+    HF_HUB_OFFLINE: "1"
+    TRANSFORMERS_OFFLINE: "1"
+    HF_DATASETS_OFFLINE: "1"
+    EXTRACT_MAX_BYTES: "${EXTRACT_MAX_BYTES:-5242880}"
+    EXTRACT_MAX_PAGES: "${EXTRACT_MAX_PAGES:-200}"
+    EXTRACT_DOC_TIMEOUT_S: "${EXTRACT_DOC_TIMEOUT_S:-300}"
+
+services:
+  extract-pymupdf:
+    <<: *extractor
+    build:
+      context: ../../backend/ingest
+      dockerfile: extractors/pymupdf/Dockerfile
+    mem_limit: 1g
+    cpus: 2
+    volumes:
+      - type: bind
+        source: ${EXTRACT_IN_DIR:-../../data/extract-in}
+        target: /in
+        read_only: true
+      - type: bind
+        source: ${EXTRACT_OUT_DIR:-../../data/extract-out}/pymupdf
+        target: /out
+
+  extract-docling:
+    <<: *extractor
+    build:
+      context: ../../backend/ingest
+      dockerfile: extractors/docling/Dockerfile
+    mem_limit: 6g
+    cpus: 2
+    volumes:
+      - type: bind
+        source: ${EXTRACT_IN_DIR:-../../data/extract-in}
+        target: /in
+        read_only: true
+      - type: bind
+        source: ${EXTRACT_OUT_DIR:-../../data/extract-out}/docling
+        target: /out
+
+  extract-unstructured:
+    <<: *extractor
+    build:
+      context: ../../backend/ingest
+      dockerfile: extractors/unstructured/Dockerfile
+    mem_limit: 6g
+    cpus: 2
+    volumes:
+      - type: bind
+        source: ${EXTRACT_IN_DIR:-../../data/extract-in}
+        target: /in
+        read_only: true
+      - type: bind
+        source: ${EXTRACT_OUT_DIR:-../../data/extract-out}/unstructured
+        target: /out

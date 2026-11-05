@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "04d2dda45b9b3ae59b8ac99c672c54171eddea9e888c9e982bd70585b860132d",
+    "error": "prevalidate:too_large: 5284949 bytes > cap 5242880",
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "docling",
+    "extractor_version": "docling==2.148.0+models.b389ac073885",
+    "page_no": 1,
+    "status": "failed",
+    "tables_json": "[]",
+    "text": ""
+  }
+]

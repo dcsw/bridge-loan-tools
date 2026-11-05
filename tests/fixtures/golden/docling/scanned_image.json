@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "83fd25d3264248ba860144a1117ebfeebe1e7f514f096ecda3fa803e33801840",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "docling",
+    "extractor_version": "docling==2.148.0+models.b389ac073885",
+    "page_no": 1,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "MORTGAGE Grantor: Laura Fitzpatrick Grantee: Wong Behavior Credit Union Proo    t t Parcel: MATT-14-4 Recorded: November 11, 2023 Book 104 Page 14 Principal: $220,000.00 Term: 24 months SYNTHETIC TEST DOCUMENT - NOT A REAL RECORD"
+  }
+]

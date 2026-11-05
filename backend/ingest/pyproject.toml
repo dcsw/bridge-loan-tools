@@ -8,3 +8,17 @@ dependencies = []
 [tool.uv]
 # Source-layout skeleton; imported as backend.ingest via the workspace root, not built.
 package = false
+
+[dependency-groups]
+pymupdf = ["pymupdf==1.27.2"]
+docling = ["docling==2.148.0", "torch==2.15.0", "torchvision==0.29.2"]
+unstructured = ["unstructured[pdf]==0.27.36", "torch==2.15.0"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

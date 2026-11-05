@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "a0a69554f169699b9e6d8fb8a1019b658b96df9936b7d0ff62133ba86c98f624",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "docling",
+    "extractor_version": "docling==2.148.0+models.b389ac073885",
+    "page_no": 1,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "DISCHARGE OF MORTGAGE Grantor: Grimes Speak Capital LLC Grantee: Edward Haas Property: 6265 Jacobson Highway Suite 418, Mattapoisett, MA Parcel: MATT-13-3 Recorded: November 17, 2023 Book 103 Page 13 Discharges mortgage recorded at 101/11 SYNTHETIC TEST DOCUMENT - NOT A REAL RECORD"
+  }
+]

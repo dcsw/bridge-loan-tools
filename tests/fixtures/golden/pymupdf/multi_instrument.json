@@ -1,0 +1,35 @@
+[
+  {
+    "doc_id": "53a9c0c7e48d3a30af2ba6e695cb043842ee4a3ae6a9576faef2635962c4db02",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "pymupdf",
+    "extractor_version": "pymupdf==1.27.2",
+    "page_no": 1,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "QUITCLAIM DEED\nGrantor: Robert Reynolds\nGrantee: Veronica Hernandez\nProperty: 5114 Ward Ville Suite 727, Mattapoisett, MA\nParcel: MATT-50-5\nRecorded: February 1, 2023  Book 200 Page 1\nSYNTHETIC TEST DOCUMENT - NOT A REAL RECORD\n"
+  },
+  {
+    "doc_id": "53a9c0c7e48d3a30af2ba6e695cb043842ee4a3ae6a9576faef2635962c4db02",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "pymupdf",
+    "extractor_version": "pymupdf==1.27.2",
+    "page_no": 2,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "MORTGAGE\nGrantor: Diane Webb\nGrantee: Ward Alone Lending LLC\nProperty: 5114 Ward Ville Suite 727, Mattapoisett, MA\nParcel: MATT-50-5\nRecorded: March 15, 2023  Book 200 Page 2\nPrincipal: $1,060,000.00\nTerm: 12 months\nSYNTHETIC TEST DOCUMENT - NOT A REAL RECORD\n"
+  },
+  {
+    "doc_id": "53a9c0c7e48d3a30af2ba6e695cb043842ee4a3ae6a9576faef2635962c4db02",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "pymupdf",
+    "extractor_version": "pymupdf==1.27.2",
+    "page_no": 3,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "DISCHARGE OF MORTGAGE\nGrantor: Martinez Tell Savings Bank\nGrantee: John Pruitt\nProperty: 5114 Ward Ville Suite 727, Mattapoisett, MA\nParcel: MATT-50-5\nRecorded: June 1, 2024  Book 200 Page 3\nDischarges mortgage recorded at 200/2\nSYNTHETIC TEST DOCUMENT - NOT A REAL RECORD\n"
+  }
+]

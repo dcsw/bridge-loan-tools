@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "f1560bf306110047202f9e1086bf8c15a63b93c1cb984a4388e5299a47c2e244",
+    "error": null,
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "unstructured",
+    "extractor_version": "unstructured==0.27.36+models.a86231cc0cea",
+    "page_no": 1,
+    "status": "ok",
+    "tables_json": "[]",
+    "text": "QUITCLAIM DEED\nGrantor: Edward Haas\nGrantee: Paul Arnold\nProperty: 4507 Young Rest Suite 202, Mattapoisett, MA\nParcel: MATT-12-2\nRecorded: November 1, 2023 Book 102 Page 12\nSYNTHETIC TEST DOCUMENT - NOT A REAL RECORD"
+  }
+]

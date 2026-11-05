@@ -1,0 +1,13 @@
+[
+  {
+    "doc_id": "84faa339c7ab544be6d23a662af26bc6091f40ca8442e2c6d495fdf27f59420e",
+    "error": "prevalidate:truncated: missing %%EOF trailer (truncated or corrupt)",
+    "extracted_at": "1970-01-01T00:00:00Z",
+    "extractor": "docling",
+    "extractor_version": "docling==2.148.0+models.b389ac073885",
+    "page_no": 1,
+    "status": "failed",
+    "tables_json": "[]",
+    "text": ""
+  }
+]
