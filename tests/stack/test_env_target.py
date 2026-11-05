@@ -12,6 +12,7 @@ REQUIRED = [
     "MINIO_KMS_SECRET_KEY",
     "POSTGRES_PASSWORD",
     "LAKEKEEPER_PG_ENCRYPTION_KEY",
+    "GATEWAY_SECRET",
 ]
 
 
@@ -44,6 +45,19 @@ def test_make_env_does_not_overwrite(tmp_path):
     before = target.read_text()
     _make_env(target)
     assert target.read_text() == before
+
+
+def test_make_env_tops_up_missing_keys_without_touching_existing(tmp_path):
+    target = tmp_path / "old.env"
+    target.write_text("MINIO_ROOT_USER=keepme\nPOSTGRES_PASSWORD=keepme-too\n")
+    target.chmod(0o600)
+    _make_env(target)
+    values = _read(target)
+    assert values["MINIO_ROOT_USER"] == "keepme"
+    assert values["POSTGRES_PASSWORD"] == "keepme-too"
+    for key in REQUIRED:
+        assert values.get(key), f"{key} was not added"
+    assert (target.stat().st_mode & 0o077) == 0, "env file must stay private"
 
 
 def test_env_is_gitignored():

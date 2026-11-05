@@ -1,0 +1,1344 @@
+{
+  "components": {
+    "schemas": {
+      "Coverage": {
+        "additionalProperties": false,
+        "properties": {
+          "generated_at": {
+            "title": "Generated At",
+            "type": "string"
+          },
+          "towns": {
+            "items": {
+              "$ref": "#/components/schemas/TownCoverage"
+            },
+            "title": "Towns",
+            "type": "array"
+          }
+        },
+        "required": [
+          "generated_at",
+          "towns"
+        ],
+        "title": "Coverage",
+        "type": "object"
+      },
+      "Feature": {
+        "additionalProperties": false,
+        "properties": {
+          "geometry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Point"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null for loans that could not be geocoded"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/LoanFeatureProperties"
+          },
+          "type": {
+            "const": "Feature",
+            "default": "Feature",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "geometry",
+          "properties"
+        ],
+        "title": "Feature",
+        "type": "object"
+      },
+      "FeatureCollection": {
+        "additionalProperties": false,
+        "properties": {
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "generated_at": {
+            "description": "Snapshot generation time (ISO 8601)",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "description": "Rows matching all filters (bbox included)",
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "type": {
+            "const": "FeatureCollection",
+            "default": "FeatureCollection",
+            "title": "Type",
+            "type": "string"
+          },
+          "unmapped_count": {
+            "description": "Rows matching all filters except bbox that have no geometry (no_match)",
+            "minimum": 0.0,
+            "title": "Unmapped Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "features",
+          "total",
+          "unmapped_count",
+          "next_cursor",
+          "generated_at"
+        ],
+        "title": "FeatureCollection",
+        "type": "object"
+      },
+      "FieldError": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "message",
+          "code"
+        ],
+        "title": "FieldError",
+        "type": "object"
+      },
+      "FieldValue": {
+        "additionalProperties": false,
+        "description": "Per-field provenance for unified values.",
+        "properties": {
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "disagreement": {
+            "default": false,
+            "title": "Disagreement",
+            "type": "boolean"
+          },
+          "source_extractor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Extractor"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "confidence"
+        ],
+        "title": "FieldValue",
+        "type": "object"
+      },
+      "GapCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "blocked": {
+            "minimum": 0.0,
+            "title": "Blocked",
+            "type": "integer"
+          },
+          "failed": {
+            "minimum": 0.0,
+            "title": "Failed",
+            "type": "integer"
+          },
+          "paid": {
+            "minimum": 0.0,
+            "title": "Paid",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "paid",
+          "blocked",
+          "failed"
+        ],
+        "title": "GapCounts",
+        "type": "object"
+      },
+      "Health": {
+        "additionalProperties": false,
+        "properties": {
+          "snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot Id"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "LoanDetail": {
+        "additionalProperties": false,
+        "description": "GET /loans/{loan_id}: list properties plus borrower (PII), provenance and source.",
+        "properties": {
+          "address_norm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address Norm"
+          },
+          "borrower": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Borrower"
+          },
+          "bridge_score": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Bridge Score",
+            "type": "integer"
+          },
+          "classifier_version": {
+            "title": "Classifier Version",
+            "type": "string"
+          },
+          "fields": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FieldValue"
+            },
+            "description": "Per-field value/source_extractor/confidence/disagreement",
+            "title": "Fields",
+            "type": "object"
+          },
+          "geocode_status": {
+            "enum": [
+              "matched",
+              "low_match",
+              "no_match"
+            ],
+            "title": "Geocode Status",
+            "type": "string"
+          },
+          "is_bridge_loan": {
+            "title": "Is Bridge Loan",
+            "type": "boolean"
+          },
+          "last_ingested_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Ingested At"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "lender_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "bank",
+                  "credit_union",
+                  "private_llc",
+                  "individual",
+                  "other",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender Type"
+          },
+          "loan_id": {
+            "title": "Loan Id",
+            "type": "string"
+          },
+          "maturity_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maturity Date"
+          },
+          "principal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Principal"
+          },
+          "recorded_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded Date"
+          },
+          "score_band": {
+            "enum": [
+              "low",
+              "mid",
+              "high"
+            ],
+            "title": "Score Band",
+            "type": "string"
+          },
+          "signals": {
+            "items": {
+              "enum": [
+                "purchase_then_mortgage_90d",
+                "second_lien",
+                "short_term",
+                "private_lender",
+                "no_discharge",
+                "keyword"
+              ],
+              "type": "string"
+            },
+            "title": "Signals",
+            "type": "array"
+          },
+          "signals_unevaluable": {
+            "items": {
+              "enum": [
+                "purchase_then_mortgage_90d",
+                "second_lien",
+                "short_term",
+                "private_lender",
+                "no_discharge",
+                "keyword"
+              ],
+              "type": "string"
+            },
+            "title": "Signals Unevaluable",
+            "type": "array"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceRef"
+          },
+          "term_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Months"
+          }
+        },
+        "required": [
+          "loan_id",
+          "address_norm",
+          "lender",
+          "lender_type",
+          "principal",
+          "recorded_date",
+          "maturity_date",
+          "term_months",
+          "bridge_score",
+          "is_bridge_loan",
+          "classifier_version",
+          "signals",
+          "geocode_status",
+          "score_band",
+          "borrower",
+          "signals_unevaluable",
+          "fields",
+          "source"
+        ],
+        "title": "LoanDetail",
+        "type": "object"
+      },
+      "LoanFeatureProperties": {
+        "additionalProperties": false,
+        "description": "GeoJSON feature properties for GET /loans (PII-free common model plus score band).",
+        "properties": {
+          "address_norm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address Norm"
+          },
+          "bridge_score": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Bridge Score",
+            "type": "integer"
+          },
+          "classifier_version": {
+            "title": "Classifier Version",
+            "type": "string"
+          },
+          "geocode_status": {
+            "enum": [
+              "matched",
+              "low_match",
+              "no_match"
+            ],
+            "title": "Geocode Status",
+            "type": "string"
+          },
+          "is_bridge_loan": {
+            "title": "Is Bridge Loan",
+            "type": "boolean"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "lender_type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "bank",
+                  "credit_union",
+                  "private_llc",
+                  "individual",
+                  "other",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender Type"
+          },
+          "loan_id": {
+            "title": "Loan Id",
+            "type": "string"
+          },
+          "maturity_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maturity Date"
+          },
+          "principal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Principal"
+          },
+          "recorded_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded Date"
+          },
+          "score_band": {
+            "enum": [
+              "low",
+              "mid",
+              "high"
+            ],
+            "title": "Score Band",
+            "type": "string"
+          },
+          "signals": {
+            "items": {
+              "enum": [
+                "purchase_then_mortgage_90d",
+                "second_lien",
+                "short_term",
+                "private_lender",
+                "no_discharge",
+                "keyword"
+              ],
+              "type": "string"
+            },
+            "title": "Signals",
+            "type": "array"
+          },
+          "term_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Months"
+          }
+        },
+        "required": [
+          "loan_id",
+          "address_norm",
+          "lender",
+          "lender_type",
+          "principal",
+          "recorded_date",
+          "maturity_date",
+          "term_months",
+          "bridge_score",
+          "is_bridge_loan",
+          "classifier_version",
+          "signals",
+          "geocode_status",
+          "score_band"
+        ],
+        "title": "LoanFeatureProperties",
+        "type": "object"
+      },
+      "Point": {
+        "additionalProperties": false,
+        "properties": {
+          "coordinates": {
+            "description": "[longitude, latitude]",
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Coordinates",
+            "type": "array"
+          },
+          "type": {
+            "const": "Point",
+            "default": "Point",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "coordinates"
+        ],
+        "title": "Point",
+        "type": "object"
+      },
+      "Problem": {
+        "additionalProperties": false,
+        "description": "RFC 7807 problem+json with a machine code and per-field errors.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code"
+        ],
+        "title": "Problem",
+        "type": "object"
+      },
+      "SourceRef": {
+        "additionalProperties": false,
+        "properties": {
+          "doc_id": {
+            "title": "Doc Id",
+            "type": "string"
+          },
+          "document_path": {
+            "description": "Authenticated API path streaming the source PDF",
+            "title": "Document Path",
+            "type": "string"
+          },
+          "recorded_book": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded Book"
+          },
+          "recorded_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded Page"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "required": [
+          "doc_id",
+          "recorded_book",
+          "recorded_page",
+          "source_url",
+          "document_path"
+        ],
+        "title": "SourceRef",
+        "type": "object"
+      },
+      "TownCoverage": {
+        "additionalProperties": false,
+        "properties": {
+          "documents_fetched": {
+            "minimum": 0.0,
+            "title": "Documents Fetched",
+            "type": "integer"
+          },
+          "gaps": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GapCounts"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null when the snapshot carries no gap data"
+          },
+          "last_ingested_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Ingested At"
+          },
+          "town": {
+            "title": "Town",
+            "type": "string"
+          }
+        },
+        "required": [
+          "town",
+          "documents_fetched",
+          "gaps",
+          "last_ingested_at"
+        ],
+        "title": "TownCoverage",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "GatewayAuth": {
+        "in": "header",
+        "name": "X-Gateway-Secret",
+        "type": "apiKey"
+      },
+      "KeyId": {
+        "in": "header",
+        "name": "X-Key-Id",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "Read API over the published bridge-loan snapshot. Gateway-only.",
+    "title": "Bridge Loan API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/coverage": {
+      "get": {
+        "operationId": "coverage_coverage_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Coverage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Missing or invalid gateway credentials"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Snapshot or dependency unavailable (Retry-After set for snapshot outages)",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying",
+                "schema": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "GatewayAuth": []
+          },
+          {
+            "KeyId": []
+          }
+        ],
+        "summary": "Per-town ingestion coverage"
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "live_health_live_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Process liveness",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "ready_health_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Snapshot or dependency unavailable (Retry-After set for snapshot outages)",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying",
+                "schema": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Snapshot readable",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/loans": {
+      "get": {
+        "operationId": "list_loans_loans_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "maximum": 2000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 512,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "description": "minLon,minLat,maxLon,maxLat (ordered, within world bounds)",
+            "in": "query",
+            "name": "bbox",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "minLon,minLat,maxLon,maxLat (ordered, within world bounds)",
+              "title": "Bbox"
+            }
+          },
+          {
+            "in": "query",
+            "name": "town",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "mattapoisett",
+                    "rye",
+                    "madison"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Town"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_score",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 100,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Score"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lender_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "bank",
+                    "credit_union",
+                    "private_llc",
+                    "individual",
+                    "other",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lender Type"
+            }
+          },
+          {
+            "description": "ISO date, inclusive",
+            "in": "query",
+            "name": "recorded_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO date, inclusive",
+              "title": "Recorded From"
+            }
+          },
+          {
+            "description": "ISO date, inclusive",
+            "in": "query",
+            "name": "recorded_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ISO date, inclusive",
+              "title": "Recorded To"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/geo+json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Invalid parameters or cursor (problem+json with errors[])"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Missing or invalid gateway credentials"
+          },
+          "410": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Cursor refers to a superseded snapshot; restart pagination"
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Response would exceed the size cap"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Snapshot or dependency unavailable (Retry-After set for snapshot outages)",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying",
+                "schema": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "GatewayAuth": []
+          },
+          {
+            "KeyId": []
+          }
+        ],
+        "summary": "List bridge-loan candidates as GeoJSON (no borrower names)"
+      }
+    },
+    "/loans/{loan_id}": {
+      "get": {
+        "operationId": "get_loan_loans__loan_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "loan_id",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9._-]{1,128}$",
+              "title": "Loan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoanDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Invalid parameters or cursor (problem+json with errors[])"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Missing or invalid gateway credentials"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unknown loan or document"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Snapshot or dependency unavailable (Retry-After set for snapshot outages)",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying",
+                "schema": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "GatewayAuth": []
+          },
+          {
+            "KeyId": []
+          }
+        ],
+        "summary": "Loan detail (borrower)"
+      }
+    },
+    "/loans/{loan_id}/source": {
+      "get": {
+        "operationId": "get_source_loans__loan_id__source_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "loan_id",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9._-]{1,128}$",
+              "title": "Loan Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "The source PDF"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Invalid parameters or cursor (problem+json with errors[])"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Missing or invalid gateway credentials"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Unknown loan or document"
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stored document is not a valid PDF"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Snapshot or dependency unavailable (Retry-After set for snapshot outages)",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying",
+                "schema": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "GatewayAuth": []
+          },
+          {
+            "KeyId": []
+          }
+        ],
+        "summary": "Stream the source PDF"
+      }
+    }
+  }
+}

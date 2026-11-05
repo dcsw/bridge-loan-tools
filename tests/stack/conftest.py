@@ -11,11 +11,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-ROOT = Path(__file__).resolve().parents[2]
-COMPOSE_FILE = ROOT / "deploy" / "docker" / "compose.yaml"
-ENV_FILE = ROOT / ".env"
-PROJECT = "bridgeloan"
+from stack_helpers import COMPOSE_FILE, ENV_FILE, PROJECT, ROOT, compose  # noqa: F401
 
 
 def pytest_configure(config):
@@ -32,23 +28,6 @@ def pytest_collection_modifyitems(config, items):
         config.hook.pytest_deselected(items=deselected)
         items[:] = [i for i in items if not i.get_closest_marker("stack")]
         print(f"\n[stack] {len(deselected)} stack test(s) deselected; set RUN_STACK=1 to run them")
-
-
-def compose(*args: str, check: bool = True, timeout: int = 900) -> subprocess.CompletedProcess:
-    cmd = [
-        "docker",
-        "compose",
-        "-p",
-        PROJECT,
-        "--env-file",
-        str(ENV_FILE),
-        "-f",
-        str(COMPOSE_FILE),
-        "--profile",
-        "core",
-        *args,
-    ]
-    return subprocess.run(cmd, capture_output=True, text=True, check=check, timeout=timeout)
 
 
 def read_env(path: Path) -> dict[str, str]:

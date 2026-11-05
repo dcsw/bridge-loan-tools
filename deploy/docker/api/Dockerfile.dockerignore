@@ -1,0 +1,8 @@
+# Context is the repo root; send only what the image copies.
+*
+!backend/api
+!backend/common/__init__.py
+!backend/common/models.py
+!backend/common/logging.py
+**/__pycache__
+**/*.pyc

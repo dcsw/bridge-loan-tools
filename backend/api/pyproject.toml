@@ -3,7 +3,16 @@ name = "bridge-loan-api"
 version = "0.1.0"
 description = "bridge-loan-tools api package"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+# The deployed image contains ONLY these (plus transitive deps); tests/api/test_image_deps.py
+# enforces the allow-list. Mangum/Lambda packaging is Phase 6.
+dependencies = [
+    "fastapi>=0.136.0",
+    "duckdb==2.0.0",
+    "uvicorn>=0.46.0",
+]
+
+[dependency-groups]
+dev = ["httpx>=0.28.1"]
 
 [tool.uv]
 # Source-layout skeleton; imported as backend.api via the workspace root, not built.

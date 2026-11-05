@@ -1,3 +1,50 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# WU7: read API. Reachable only on the private `core` network (the gateway, WU8, is the only
+# published service); there is deliberately no `ports:` here.
+# Needs GATEWAY_SECRET in .env (shared secret the gateway injects; `make api-env` adds it).
+services:
+  api:
+    profiles: [core]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/api/Dockerfile
+    environment:
+      GATEWAY_SECRET: ${GATEWAY_SECRET:?run make api-env}
+      SNAPSHOT_BASE: s3://snapshots/current
+      SNAPSHOT_S3_ENDPOINT: minio:9000
+      # Local stack: WU3 has no per-service MinIO users, so list and detail share the root
+      # credentials. Cloud deployments must give them distinct IAM principals (ADR-0006).
+      LIST_S3_KEY_ID: ${MINIO_ROOT_USER:?run make env}
+      LIST_S3_SECRET: ${MINIO_ROOT_PASSWORD:?run make env}
+      DETAIL_S3_KEY_ID: ${MINIO_ROOT_USER:?run make env}
+      DETAIL_S3_SECRET: ${MINIO_ROOT_PASSWORD:?run make env}
+      RAW_S3_ENDPOINT: http://minio:9000
+      RAW_S3_BUCKET: raw
+      RAW_S3_KEY_ID: ${MINIO_ROOT_USER:?run make env}
+      RAW_S3_SECRET: ${MINIO_ROOT_PASSWORD:?run make env}
+      AUDIT_LOG_PATH: /var/lib/bridge-loan/audit/audit.log
+      AUDIT_RETENTION_DAYS: ${AUDIT_RETENTION_DAYS:-365}
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - api-audit:/var/lib/bridge-loan/audit
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)"
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks: [core]
+    restart: unless-stopped
+
+volumes:
+  api-audit:

@@ -14,8 +14,8 @@ import requests
 import yaml
 from botocore.client import Config
 from botocore.exceptions import ClientError
-from conftest import compose
 from pyiceberg.catalog import load_catalog
+from stack_helpers import compose
 
 pytestmark = pytest.mark.stack
 
