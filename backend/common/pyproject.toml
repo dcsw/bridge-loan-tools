@@ -3,7 +3,14 @@ name = "bridge-loan-common"
 version = "0.1.0"
 description = "bridge-loan-tools common package"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "faker>=40.44.0",
+    "fpdf2>=2.9.0",
+    "pillow>=13.0.0",
+    "pyarrow>=26.0.1",
+    "pydantic>=2.14.3",
+    "pyyaml>=6.0.3",
+]
 
 [tool.uv]
 # Source-layout skeleton; imported as backend.common via the workspace root, not built.

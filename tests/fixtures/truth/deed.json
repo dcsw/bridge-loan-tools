@@ -1,0 +1,16 @@
+{
+  "doc": "deed.pdf",
+  "instruments": [
+    {
+      "address_raw": "4507 Young Rest Suite 202, Mattapoisett, MA",
+      "doc_type": "deed",
+      "grantee": "Paul Arnold",
+      "grantor": "Edward Haas",
+      "ordinal": 0,
+      "parcel_key": "MATT-12-2",
+      "recorded_book": "102",
+      "recorded_date": "2023-11-01",
+      "recorded_page": "12"
+    }
+  ]
+}

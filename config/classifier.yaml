@@ -1,0 +1,18 @@
+# Classifier + signal configuration (versioned; weights live here, not in code).
+# Design section 9: v0 is a placeholder that classifies EVERY loan as a bridge loan.
+# Swap `classifier_impl` (and bump `classifier_version`) to replace it without re-ingesting.
+classifier_version: placeholder-all-true
+classifier_impl: placeholder_all_true
+signals_version: v1
+# Signal weights are metadata only while the placeholder classifier is active.
+weights:
+  short_term: 30
+  private_lender: 25
+  purchase_then_mortgage_90d: 20
+  second_lien: 20
+  no_discharge: 15
+  keyword: 10
+params:
+  short_term_max_months: 24
+  purchase_window_days: 90
+  keywords: [bridge, interim, swing]

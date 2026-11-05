@@ -1,0 +1,17 @@
+{
+  "doc": "discharge.pdf",
+  "instruments": [
+    {
+      "address_raw": "6265 Jacobson Highway Suite 418, Mattapoisett, MA",
+      "doc_type": "discharge",
+      "grantee": "Edward Haas",
+      "grantor": "Grimes Speak Capital LLC",
+      "ordinal": 0,
+      "parcel_key": "MATT-13-3",
+      "recorded_book": "103",
+      "recorded_date": "2023-11-17",
+      "recorded_page": "13",
+      "refers_to_ref": "101/11"
+    }
+  ]
+}

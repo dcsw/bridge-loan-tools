@@ -1,0 +1,36 @@
+{
+  "_provenance": "Synthetic recording shaped like a Census geocoder response; not a captured live response.",
+  "expected_geocode_status": "low_match",
+  "request": {
+    "address": "19296 Troy Shoals, Mattapoisett, MA",
+    "benchmark": "Public_AR_Current",
+    "endpoint": "locations/onelineaddress"
+  },
+  "response": {
+    "result": {
+      "addressMatches": [
+        {
+          "addressComponents": {
+            "city": "MATTAPOISETT",
+            "state": "MA",
+            "zip": "02739"
+          },
+          "coordinates": {
+            "x": -70.8302,
+            "y": 41.6601
+          },
+          "matchedAddress": "MAIN ST, MATTAPOISETT, MA, 02739",
+          "tigerLine": {
+            "side": "R",
+            "tigerLineId": "0000001"
+          }
+        }
+      ],
+      "input": {
+        "address": {
+          "address": "19296 Troy Shoals, Mattapoisett, MA"
+        }
+      }
+    }
+  }
+}

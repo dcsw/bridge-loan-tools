@@ -1,0 +1,42 @@
+{
+  "doc": "multi_instrument.pdf",
+  "instruments": [
+    {
+      "address_raw": "5114 Ward Ville Suite 727, Mattapoisett, MA",
+      "doc_type": "deed",
+      "grantee": "Veronica Hernandez",
+      "grantor": "Robert Reynolds",
+      "ordinal": 0,
+      "parcel_key": "MATT-50-5",
+      "recorded_book": "200",
+      "recorded_date": "2023-02-01",
+      "recorded_page": "1"
+    },
+    {
+      "address_raw": "5114 Ward Ville Suite 727, Mattapoisett, MA",
+      "doc_type": "mortgage",
+      "grantee": "Ward Alone Lending LLC",
+      "grantor": "Diane Webb",
+      "maturity_date": "2024-03-15",
+      "ordinal": 1,
+      "parcel_key": "MATT-50-5",
+      "principal": "1060000.00",
+      "recorded_book": "200",
+      "recorded_date": "2023-03-15",
+      "recorded_page": "2",
+      "term_months": 12
+    },
+    {
+      "address_raw": "5114 Ward Ville Suite 727, Mattapoisett, MA",
+      "doc_type": "discharge",
+      "grantee": "John Pruitt",
+      "grantor": "Martinez Tell Savings Bank",
+      "ordinal": 2,
+      "parcel_key": "MATT-50-5",
+      "recorded_book": "200",
+      "recorded_date": "2024-06-01",
+      "recorded_page": "3",
+      "refers_to_ref": "200/2"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "doc": "mortgage.pdf",
+  "instruments": [
+    {
+      "address_raw": "12525 Obrien Squares Suite 947, Mattapoisett, MA",
+      "doc_type": "mortgage",
+      "grantee": "Lee Product Capital LLC",
+      "grantor": "Christina Cook",
+      "maturity_date": "2026-05-29",
+      "ordinal": 0,
+      "parcel_key": "MATT-11-1",
+      "principal": "530000.00",
+      "recorded_book": "101",
+      "recorded_date": "2024-11-28",
+      "recorded_page": "11",
+      "term_months": 18
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "_provenance": "Synthetic recording shaped like a Census geocoder response; not a captured live response.",
+  "expected_geocode_status": "no_match",
+  "request": {
+    "address": "19296 Troy Shoals, Mattapoisett, MA",
+    "benchmark": "Public_AR_Current",
+    "endpoint": "locations/onelineaddress"
+  },
+  "response": {
+    "result": {
+      "addressMatches": [],
+      "input": {
+        "address": {
+          "address": "19296 Troy Shoals, Mattapoisett, MA"
+        }
+      }
+    }
+  }
+}

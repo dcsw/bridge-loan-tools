@@ -1,0 +1,19 @@
+{
+  "doc": "scanned_image.pdf",
+  "instruments": [
+    {
+      "address_raw": "02859 Hernandez Burg, Mattapoisett, MA",
+      "doc_type": "mortgage",
+      "grantee": "Wong Behavior Credit Union",
+      "grantor": "Laura Fitzpatrick",
+      "maturity_date": "2025-11-10",
+      "ordinal": 0,
+      "parcel_key": "MATT-14-4",
+      "principal": "220000.00",
+      "recorded_book": "104",
+      "recorded_date": "2023-11-11",
+      "recorded_page": "14",
+      "term_months": 24
+    }
+  ]
+}
