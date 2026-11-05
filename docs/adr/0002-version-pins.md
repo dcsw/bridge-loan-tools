@@ -61,3 +61,29 @@ credentials would carry the unresolvable internal `minio:9000` endpoint.
 
 ## To be pinned
 Spark, Iceberg-Spark runtime, KrakenD, Node (later units).
+
+## Pinned (local dev tools, `make tools`)
+Installed by `scripts/install_tools.sh` into the gitignored `./.tools/bin`, each download verified
+against the checksums file of the same release (integrity only, no signature check). linux/amd64.
+
+| Tool | Version |
+|---|---|
+| gitleaks | 8.30.1 |
+| OpenTofu (`tofu`) | 1.13.8 |
+| Trivy | 0.76.2 |
+
+Notes: the WU1 hook test still skips locally because pre-commit builds the gitleaks hook with Go
+(not installed). Direct `gitleaks detect` runs clean on history via `.gitleaksignore` (one entry:
+the deliberate fake key committed in 553e956, now assembled at runtime in the test).
+
+## Decision: Postgres, pg_lake and DuckDB (2026-11-05, user delegated the call)
+- Postgres here is Lakekeeper's catalog backend; it holds catalog metadata, not table data.
+- **pg_lake** (Snowflake-Labs, latest release v3.6.0) is Postgres + a `pgduck_server` process that runs
+  DuckDB underneath, and it publishes no prebuilt image (its Docker setup builds from source via Task).
+  It therefore does not remove DuckDB, it embeds it.
+- **Decision:** keep DuckDB as the read engine for the API (serverless-friendly, reads the published
+  snapshot with no catalog or database, per design §3.3) and for local Iceberg reads. Keep stock
+  `postgres:17-alpine` for Lakekeeper. Treat pg_lake as an optional, later local service that gives a
+  Postgres SQL interface over the same Iceberg tables; it is not on the Phase 1 critical path and
+  needs a source build to adopt. Revisit when a prebuilt image exists or if you want Postgres SQL
+  access to the semantic view.

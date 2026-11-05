@@ -21,3 +21,6 @@ notebooks/**/outputs/
 # coverage artifacts
 .coverage
 htmlcov/
+
+# locally installed dev tools
+.tools/

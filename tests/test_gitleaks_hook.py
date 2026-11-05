@@ -11,8 +11,9 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG = ROOT / ".pre-commit-config.yaml"
-# Fake AWS-style key; matches gitleaks' aws-access-token rule, not a real credential.
-FAKE_SECRET = 'aws_access_key_id = "AKIAIOSFODNN7ABCDEFG"\n'
+# Fake AWS-style key assembled at runtime so this source file itself contains no
+# key-shaped literal (gitleaks would flag it); matches the aws-access-token rule.
+FAKE_SECRET = 'aws_access_key_id = "' + "AKIA" + "IOSFODNN7ABCDEFG" + '"\n'
 
 
 def _gitleaks_repo():

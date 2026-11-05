@@ -1,0 +1,2 @@
+# Deliberate fake AWS key planted by tests/test_gitleaks_hook.py (commit 553e956); not a credential.
+553e956429ca5e24ebedfea268f754243bb08a73:tests/test_gitleaks_hook.py:aws-access-token:15
