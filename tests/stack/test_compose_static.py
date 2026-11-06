@@ -18,6 +18,7 @@ FRAGMENTS = [
     "compose.api.yaml",
     "compose.gateway.yaml",
     "compose.web.yaml",
+    "compose.notebooks.yaml",
 ]
 SERVICES = {"minio", "postgres", "lakekeeper-migrate", "lakekeeper", "bootstrap"}
 

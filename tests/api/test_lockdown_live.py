@@ -6,6 +6,7 @@ Answers the WU7 spike: does ``allowed_paths`` accept s3:// URIs with
 
 from __future__ import annotations
 
+import os
 import uuid
 from pathlib import Path
 
@@ -25,7 +26,7 @@ ENDPOINT = "127.0.0.1:9000"
 
 def _env() -> dict[str, str]:
     out = {}
-    for line in (ROOT / ".env").read_text().splitlines():
+    for line in (ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")).read_text().splitlines():
         if line.strip() and not line.startswith("#") and "=" in line:
             k, _, v = line.partition("=")
             out[k.strip()] = v.strip()

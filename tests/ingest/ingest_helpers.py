@@ -10,7 +10,7 @@ import duckdb
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPOSE_FILE = ROOT / "deploy" / "docker" / "compose.yaml"
-ENV_FILE = ROOT / ".env"
+ENV_FILE = ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")
 PROJECT = "bridgeloan"
 LAKEKEEPER = "http://127.0.0.1:8181"
 WAREHOUSE = "bridgeloan"

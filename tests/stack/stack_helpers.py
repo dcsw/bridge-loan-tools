@@ -6,12 +6,13 @@ when several test directories are collected in one session, so helpers live here
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPOSE_FILE = ROOT / "deploy" / "docker" / "compose.yaml"
-ENV_FILE = ROOT / ".env"
+ENV_FILE = ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")
 PROJECT = "bridgeloan"
 
 

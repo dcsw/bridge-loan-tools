@@ -20,7 +20,7 @@ from backend.common.models import Manifest
 from backend.fetcher.raw_ingest import MANIFEST_PREFIX, PDF_PREFIX, RawIngestor
 
 ROOT = Path(__file__).resolve().parents[2]
-ENV_FILE = ROOT / ".env"
+ENV_FILE = ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")
 COMPOSE_FILE = ROOT / "deploy" / "docker" / "compose.yaml"
 PROJECT = "bridgeloan"
 

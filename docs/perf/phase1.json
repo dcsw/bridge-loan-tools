@@ -1,0 +1,49 @@
+{
+  "informational": true,
+  "tool": "starlette TestClient, in-process, time.perf_counter",
+  "rows": 5000,
+  "runs_per_endpoint": 50,
+  "warmup_runs": 5,
+  "conditions": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-12450H",
+    "logical_cores": 4,
+    "memory_gib": 15.6,
+    "os": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "duckdb": "2.0.0",
+    "fastapi": "0.162.0"
+  },
+  "cold_first_request_ms": 104.9,
+  "endpoints": {
+    "GET /loans (default limit)": {
+      "p50_ms": 18.32,
+      "p95_ms": 48.61,
+      "max_ms": 51.65
+    },
+    "GET /loans?limit=1000": {
+      "p50_ms": 26.14,
+      "p95_ms": 62.55,
+      "max_ms": 65.64
+    },
+    "GET /loans?min_score=80&lender_type=private_llc": {
+      "p50_ms": 15.7,
+      "p95_ms": 25.29,
+      "max_ms": 47.98
+    },
+    "GET /loans?bbox (small box)": {
+      "p50_ms": 14.13,
+      "p95_ms": 20.79,
+      "max_ms": 49.73
+    },
+    "GET /loans/{id} (detail)": {
+      "p50_ms": 14.01,
+      "p95_ms": 16.46,
+      "max_ms": 17.35
+    },
+    "GET /coverage": {
+      "p50_ms": 4.93,
+      "p95_ms": 6.25,
+      "max_ms": 6.55
+    }
+  }
+}

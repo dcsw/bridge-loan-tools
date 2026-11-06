@@ -24,7 +24,7 @@ COMPOSE_DIR = ROOT / "deploy" / "docker"
 GATEWAY_COMPOSE = COMPOSE_DIR / "compose.gateway.yaml"
 EDGE_PATH = COMPOSE_DIR / "gateway" / "edge.py"
 OPENAPI_PATH = ROOT / "openapi.json"
-ENV_FILE = ROOT / ".env"
+ENV_FILE = ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")
 
 
 def load_edge():

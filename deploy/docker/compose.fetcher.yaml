@@ -28,3 +28,27 @@ services:
     volumes:
       - ../../data/drop:/drop
     networks: [fetch]
+
+  # WU11 e2e only (profile `e2e`): the synthetic fake portal, on the same internal `fetch` network so
+  # the fetcher can reach it as http://fakeportal:8080 while still having no route anywhere else.
+  # Serves only tests/fixtures/pdfs (read-only mounts); same image as the fetcher.
+  fakeportal:
+    profiles: [e2e]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/fetcher/Dockerfile
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    entrypoint: ["python", "-m", "tests.fakeportal.server", "--host", "0.0.0.0", "--port", "8080"]
+    volumes:
+      - ../../tests/fakeportal:/app/tests/fakeportal:ro
+      - ../../tests/fixtures/pdfs:/app/tests/fixtures/pdfs:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8080/pdfs/mortgage.pdf', timeout=3)"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    networks: [fetch]

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -83,7 +84,7 @@ def make_instrument(ordinal=0, doc_id=SHA, **kw) -> Instrument:
 # -- live (RUN_STACK=1) helpers ------------------------------------------------------------------
 
 COMPOSE_FILE = ROOT / "deploy" / "docker" / "compose.yaml"
-ENV_FILE = ROOT / ".env"
+ENV_FILE = ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")
 PROJECT = "bridgeloan"
 
 

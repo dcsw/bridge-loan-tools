@@ -6,6 +6,7 @@ list/detail credentials, the SigV4 source-PDF stream, and manifest re-read after
 
 from __future__ import annotations
 
+import os
 import time
 import uuid
 
@@ -28,7 +29,7 @@ PDF = b"%PDF-1.7\n" + bytes(range(256)) * 400  # > one 64 KiB chunk
 
 def _env() -> dict[str, str]:
     out = {}
-    for line in (ROOT / ".env").read_text().splitlines():
+    for line in (ROOT / os.environ.get("BRIDGE_ENV_FILE", ".env")).read_text().splitlines():
         if line.strip() and not line.startswith("#") and "=" in line:
             k, _, v = line.partition("=")
             out[k.strip()] = v.strip()
