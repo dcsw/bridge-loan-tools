@@ -46,6 +46,21 @@ make publish                           # MANUAL: semantic_loans_v1 -> versioned 
 make gateway-token KEY_ID=me           # JWT for the gateway
 ```
 
+## Where the UI is
+
+Everything binds to 127.0.0.1 only.
+
+| How you run it | URL |
+|---|---|
+| Web image: `make web-up` (port set by `WEB_PORT`) | http://127.0.0.1:3000 |
+| `make e2e` stack (`WEB_PORT=13000`; may be torn down after the run) | http://127.0.0.1:13000 |
+| Dev server: `make web-dev` (needs Node; `BRIDGE_API_URL`, `BRIDGE_API_JWT`) | http://127.0.0.1:5173 |
+| Offline mock build used by the Playwright/MSW suite | http://127.0.0.1:4173 |
+
+The web image has nginx inject the gateway JWT server-side (`WEB_API_JWT`, minted with
+`make gateway-token`); it is never in the browser bundle. The API itself is only reachable through the
+gateway (port 8080 by default, 18090 in the e2e stack).
+
 Notebooks (fixtures only, in a no-network container): `make notebooks-test`.
 Every target is listed by `make help`.
 
