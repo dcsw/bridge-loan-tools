@@ -1,3 +1,73 @@
-# Stub created by WU3 so `include:` resolves (Compose 5.6.0 ignores `required: false`).
-# The owning work unit replaces this file with its real services.
-services: {}
+# WU8: the gateway. Two containers, one public surface (ADR-0005):
+#   gateway  thin edge; the ONLY published port in this unit (127.0.0.1:8080). It adds the JSON
+#            body / Retry-After that KrakenD CE cannot emit on its own errors.
+#   krakend  KrakenD CE; private. Validates the HS256 JWT, forwards the `sub` claim as X-Key-Id,
+#            injects X-Gateway-Secret toward the api.
+# Secrets (GATEWAY_SECRET, JWT_SIGNING_KEY) come from .env (`make env`); the runtime config is
+# rendered into a tmpfs by gateway/entrypoint.sh, nothing secret is committed or baked in.
+services:
+  krakend:
+    profiles: [core]
+    image: krakend:3.0.3@sha256:05f79d7ee29bf2018a5fa314b9610ae0aecdd07af1ae3e6a2652d2e6c0f05b02
+    user: "1000:65533"
+    entrypoint: ["/bin/sh", "/gateway/entrypoint.sh"]
+    environment:
+      GATEWAY_SECRET: ${GATEWAY_SECRET:?run make env}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:?run make env}
+      USAGE_DISABLE: "1"
+    volumes:
+      - ../../gateway:/gateway:ro
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/__health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [core]
+    restart: unless-stopped
+
+  gateway:
+    profiles: [core]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/gateway/Dockerfile
+    environment:
+      UPSTREAM: http://krakend:8080
+      MAX_BODY_BYTES: "65536"
+      RETRY_AFTER_SECONDS: "1"
+      # CORS allow-list is read from the one committed source of truth
+      CORS_CONFIG: /gateway/krakend.json
+    ports:
+      - "127.0.0.1:${GATEWAY_PORT:-8080}:8080"
+    volumes:
+      - ../../gateway:/gateway:ro
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/__health', timeout=2)"
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      krakend:
+        condition: service_healthy
+      # also makes `up --wait` account for the one-shot bootstrap job (otherwise compose reports
+      # "bootstrap exited (0)" as a failure when it finishes while the gateway is still starting)
+      bootstrap:
+        condition: service_completed_successfully
+    networks: [core]
+    restart: unless-stopped

@@ -13,6 +13,7 @@ REQUIRED = [
     "POSTGRES_PASSWORD",
     "LAKEKEEPER_PG_ENCRYPTION_KEY",
     "GATEWAY_SECRET",
+    "JWT_SIGNING_KEY",
 ]
 
 
@@ -58,6 +59,14 @@ def test_make_env_tops_up_missing_keys_without_touching_existing(tmp_path):
     for key in REQUIRED:
         assert values.get(key), f"{key} was not added"
     assert (target.stat().st_mode & 0o077) == 0, "env file must stay private"
+
+
+def test_jwt_signing_key_is_long_enough_for_hs256(tmp_path):
+    target = tmp_path / "j.env"
+    _make_env(target)
+    values = _read(target)
+    assert len(values["JWT_SIGNING_KEY"]) >= 64, "HS256 key should carry >= 256 bits"
+    assert values["JWT_SIGNING_KEY"] != values["GATEWAY_SECRET"]
 
 
 def test_env_is_gitignored():

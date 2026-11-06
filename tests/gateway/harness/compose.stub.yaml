@@ -1,0 +1,47 @@
+# Test harness for the gateway: the REAL api image serving a local fixture snapshot, on a private
+# `core` network, so the real gateway fragment can be exercised without MinIO/Lakekeeper.
+# Used only by tests/gateway (project name `gwtest`); never part of the product stack.
+services:
+  api:
+    profiles: [core]
+    build:
+      context: ../..  # relative to the project directory (deploy/docker, the first -f file)
+      dockerfile: deploy/docker/api/Dockerfile
+    environment:
+      GATEWAY_SECRET: ${GATEWAY_SECRET:?run make env}
+      SNAPSHOT_BASE: /snap
+      AUDIT_LOG_PATH: /var/lib/bridge-loan/audit/audit.log
+    read_only: true
+    tmpfs:
+      - /tmp
+    volumes:
+      - ${SNAPSHOT_DIR:?set by the test}:/snap:ro
+      - api-audit:/var/lib/bridge-loan/audit
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)"
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks: [core]
+
+  # stands in for the core stack's one-shot bootstrap job, which compose.gateway.yaml waits for
+  bootstrap:
+    profiles: [core]
+    image: python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
+    command: ["python", "-c", "pass"]
+    restart: "no"
+    networks: [core]
+
+networks:
+  core:
+    driver: bridge
+
+volumes:
+  api-audit:

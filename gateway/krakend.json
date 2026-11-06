@@ -1,0 +1,353 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 4,
+  "name": "bridge-loan-gateway",
+  "port": 8080,
+  "timeout": "10s",
+  "cache_ttl": "0s",
+  "output_encoding": "no-op",
+  "read_header_timeout": "5s",
+  "read_timeout": "15s",
+  "idle_timeout": "30s",
+  "extra_config": {
+    "router": {
+      "auto_options": true
+    },
+    "telemetry/logging": {
+      "level": "INFO",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true
+    },
+    "security/cors": {
+      "allow_origins": [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+      ],
+      "allow_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "allow_headers": [
+        "Authorization",
+        "Accept",
+        "Accept-Language"
+      ],
+      "expose_headers": [
+        "Retry-After",
+        "Content-Length",
+        "Content-Type"
+      ],
+      "max_age": "12h",
+      "allow_credentials": false
+    },
+    "security/http": {
+      "content_type_nosniff": true,
+      "frame_deny": true,
+      "referrer_policy": "no-referrer",
+      "content_security_policy": "default-src 'none'; frame-ancestors 'none'"
+    }
+  },
+  "endpoints": [
+    {
+      "endpoint": "/coverage",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language",
+        "X-Key-Id"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/coverage",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "audience": [
+            "bridge-loan-api"
+          ],
+          "issuer": "bridge-loan-gateway",
+          "jwk_local_path": "/tmp/jwks.json",
+          "disable_jwk_security": true,
+          "propagate_claims": [
+            [
+              "sub",
+              "X-Key-Id"
+            ]
+          ],
+          "operation_debug": false
+        },
+        "qos/ratelimit/router": {
+          "client_max_rate": 10,
+          "client_capacity": 20,
+          "strategy": "header",
+          "key": "Authorization"
+        }
+      }
+    },
+    {
+      "endpoint": "/loans",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language",
+        "X-Key-Id"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/loans",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "audience": [
+            "bridge-loan-api"
+          ],
+          "issuer": "bridge-loan-gateway",
+          "jwk_local_path": "/tmp/jwks.json",
+          "disable_jwk_security": true,
+          "propagate_claims": [
+            [
+              "sub",
+              "X-Key-Id"
+            ]
+          ],
+          "operation_debug": false
+        },
+        "qos/ratelimit/router": {
+          "client_max_rate": 10,
+          "client_capacity": 20,
+          "strategy": "header",
+          "key": "Authorization"
+        }
+      },
+      "input_query_strings": [
+        "bbox",
+        "cursor",
+        "lender_type",
+        "limit",
+        "min_score",
+        "recorded_from",
+        "recorded_to",
+        "town"
+      ]
+    },
+    {
+      "endpoint": "/loans/{loan_id}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language",
+        "X-Key-Id"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/loans/{loan_id}",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "audience": [
+            "bridge-loan-api"
+          ],
+          "issuer": "bridge-loan-gateway",
+          "jwk_local_path": "/tmp/jwks.json",
+          "disable_jwk_security": true,
+          "propagate_claims": [
+            [
+              "sub",
+              "X-Key-Id"
+            ]
+          ],
+          "operation_debug": false
+        },
+        "qos/ratelimit/router": {
+          "client_max_rate": 2,
+          "client_capacity": 4,
+          "strategy": "header",
+          "key": "Authorization"
+        }
+      }
+    },
+    {
+      "endpoint": "/loans/{loan_id}/source",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language",
+        "X-Key-Id"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/loans/{loan_id}/source",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "HS256",
+          "audience": [
+            "bridge-loan-api"
+          ],
+          "issuer": "bridge-loan-gateway",
+          "jwk_local_path": "/tmp/jwks.json",
+          "disable_jwk_security": true,
+          "propagate_claims": [
+            [
+              "sub",
+              "X-Key-Id"
+            ]
+          ],
+          "operation_debug": false
+        },
+        "qos/ratelimit/router": {
+          "client_max_rate": 2,
+          "client_capacity": 4,
+          "strategy": "header",
+          "key": "Authorization"
+        }
+      }
+    },
+    {
+      "endpoint": "/health/live",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/health/live",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "client_max_rate": 10,
+          "client_capacity": 20,
+          "strategy": "header",
+          "key": "X-Forwarded-For"
+        }
+      }
+    },
+    {
+      "endpoint": "/health/ready",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Accept",
+        "Accept-Language"
+      ],
+      "backend": [
+        {
+          "host": [
+            "http://api:8000"
+          ],
+          "url_pattern": "/health/ready",
+          "encoding": "no-op",
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": [
+                  "request"
+                ],
+                "name": "X-Gateway-Secret",
+                "value": "${GATEWAY_SECRET}"
+              }
+            }
+          }
+        }
+      ],
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "client_max_rate": 10,
+          "client_capacity": 20,
+          "strategy": "header",
+          "key": "X-Forwarded-For"
+        }
+      }
+    }
+  ]
+}

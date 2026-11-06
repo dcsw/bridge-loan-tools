@@ -22,6 +22,8 @@ def generate() -> dict[str, str]:
         "POSTGRES_PASSWORD": secrets.token_hex(24),
         "LAKEKEEPER_PG_ENCRYPTION_KEY": secrets.token_hex(32),
         "GATEWAY_SECRET": secrets.token_hex(32),
+        # HS256 signing key for the gateway's static per-key-id JWT (ADR-0005)
+        "JWT_SIGNING_KEY": secrets.token_hex(32),
     }
     return values
 
