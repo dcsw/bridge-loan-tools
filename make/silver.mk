@@ -44,3 +44,8 @@ silver-cov:  ## Coverage gates: >=80% overall on the silver modules, >=95% branc
 	uv run --frozen pytest tests/silver $(SILVER_COV_MODULES) --cov-branch \
 		--cov-report=term-missing --cov-fail-under=80
 	uv run --frozen coverage report --include='backend/ingest/unify.py' --fail-under=95
+
+.PHONY: quality-report
+quality-report:  ## Phase 2 report: cross-extractor agreement, null rates, extractor comparison, coverage + gaps (no Docker)
+	uv run --frozen python -m backend.ingest.quality_report --extract-out data/extract-out \
+		--manifests $(SILVER_MANIFEST_DIR) --out docs/reports/quality-report

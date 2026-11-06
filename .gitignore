@@ -32,3 +32,4 @@ frontend/dist-mock/
 frontend/test-results/
 frontend/playwright-report/
 .claude/worktrees/
+docs/reports/
