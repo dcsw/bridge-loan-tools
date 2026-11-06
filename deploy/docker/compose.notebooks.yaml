@@ -1,0 +1,30 @@
+# Notebooks (WU10): one-shot, profile `notebooks`; NOT part of `up -d` health.
+#   make notebooks-test
+# Network: none. The notebooks run on fixtures only (fake portal on loopback, recorded geocoder
+# responses), so the container has no network at all. Sources are mounted read-only; /tmp is a tmpfs.
+
+services:
+  notebooks:
+    profiles: [notebooks]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/notebooks/Dockerfile
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    restart: "no"
+    network_mode: none
+    pids_limit: 512
+    mem_limit: 3g
+    cpus: 2
+    working_dir: /repo
+    tmpfs:
+      - /tmp:size=1g,mode=1777,nosuid,exec
+    volumes:
+      - {type: bind, source: ../../notebooks, target: /repo/notebooks, read_only: true}
+      - {type: bind, source: ../../backend, target: /repo/backend, read_only: true}
+      - {type: bind, source: ../../config, target: /repo/config, read_only: true}
+      - {type: bind, source: ../../tests/fixtures, target: /repo/tests/fixtures, read_only: true}
+      - {type: bind, source: ../../tests/fakeportal, target: /repo/tests/fakeportal, read_only: true}

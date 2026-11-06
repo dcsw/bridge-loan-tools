@@ -16,6 +16,8 @@ include:
     required: false
   - path: compose.web.yaml
     required: false
+  - path: compose.notebooks.yaml
+    required: false
 
 networks:
   core:
