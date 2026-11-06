@@ -102,7 +102,7 @@ param rides `x-api-key`, which is not a gateway-auth header):
 ```python
 client = anthropic.Anthropic(
     base_url=f"{os.environ['CAVE_GATEWAY_URL']}/w/<app>",
-    api_key=os.environ["ANTHROPIC_API_KEY"],  # byok: unchanged · stored: use CAVE_API_KEY
+    api_key=os.environ["ANTHROPIC_API_KEY"],      # byok: unchanged · stored: use CAVE_API_KEY
     default_headers={
         "x-cave-api-key": os.environ["CAVE_API_KEY"],
         # byok only:
