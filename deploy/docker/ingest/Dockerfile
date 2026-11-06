@@ -39,7 +39,11 @@ RUN groupadd -g 10001 ingest && useradd -u 10001 -g 10001 -M -d /tmp -s /usr/sbi
 WORKDIR /app
 COPY backend/common /app/backend/common
 COPY backend/ingest/__init__.py backend/ingest/bronze.py backend/ingest/quarantine.py \
-     backend/ingest/spark_session.py backend/ingest/smoke.py /app/backend/ingest/
+     backend/ingest/spark_session.py backend/ingest/smoke.py \
+     backend/ingest/unify.py backend/ingest/loans.py backend/ingest/geocode.py \
+     backend/ingest/views.py backend/ingest/silver_job.py /app/backend/ingest/
+COPY backend/ingest/sql /app/backend/ingest/sql
+COPY config/classifier.yaml /app/config/classifier.yaml
 RUN touch /app/backend/__init__.py
 
 ENV PYTHONPATH=/app \

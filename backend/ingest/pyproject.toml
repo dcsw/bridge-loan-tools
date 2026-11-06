@@ -10,7 +10,7 @@ dependencies = []
 package = false
 
 [dependency-groups]
-spark = ["pyspark==4.0.5", "pydantic==2.14.3"]
+spark = ["pyspark==4.0.5", "pydantic==2.14.3", "pyyaml==6.0.3"]
 pymupdf = ["pymupdf==1.27.2"]
 docling = ["docling==2.148.0", "torch==2.15.0", "torchvision==0.29.2"]
 unstructured = ["unstructured[pdf]==0.27.36", "torch==2.15.0"]

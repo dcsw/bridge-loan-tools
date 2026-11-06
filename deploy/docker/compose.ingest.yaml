@@ -30,11 +30,22 @@ services:
       WAREHOUSE_NAME: bridgeloan
       AWS_REGION: us-east-1
       EXTRACT_OUT: /extract-out
+      MANIFEST_DIR: /manifests # WU6 silver job
+      SILVER_WORK: /work # WU6 silver job
     volumes:
       - type: bind
         source: ${EXTRACT_OUT_DIR:-../../data/extract-out}
         target: /extract-out
         read_only: true
+      # WU6 silver job: WU4 manifest rows (town, source_url), exported by `make silver-manifests`.
+      - type: bind
+        source: ${MANIFEST_DIR_HOST:-../../data/manifests}
+        target: /manifests
+        read_only: true
+      # WU6 silver job: geocode cache (read) + pending geocode requests (written).
+      - type: bind
+        source: ${SILVER_WORK_DIR:-../../data/silver-work}
+        target: /work
     depends_on:
       lakekeeper:
         condition: service_healthy

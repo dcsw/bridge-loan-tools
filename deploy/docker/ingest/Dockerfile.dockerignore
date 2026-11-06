@@ -5,6 +5,13 @@
 !backend/ingest/quarantine.py
 !backend/ingest/spark_session.py
 !backend/ingest/smoke.py
+!backend/ingest/unify.py
+!backend/ingest/loans.py
+!backend/ingest/geocode.py
+!backend/ingest/views.py
+!backend/ingest/silver_job.py
+!backend/ingest/sql
+!config/classifier.yaml
 !deploy/docker/ingest/requirements.txt
 **/__pycache__
 **/*.pyc

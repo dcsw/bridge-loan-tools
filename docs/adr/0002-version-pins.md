@@ -119,3 +119,26 @@ Operational notes found while verifying:
   and the container runs non-root, `cap_drop: ALL`, read-only root FS.
 - Network: the job sits only on the `ingest` network (`internal: true`); `minio` and `lakekeeper` are
   additionally attached to it. Credentials are vended by Lakekeeper, so the container holds no secrets.
+
+## Silver job (WU6)
+
+Append-only; added by the Silver unit. The silver job runs in the same ingest image (`local[*]`, Iceberg REST
+catalog) as `python -m backend.ingest.silver_job`; no new Spark/Iceberg/Java pins.
+
+- Image additions: `pyyaml==6.0.3` (group `spark`, exported into the hash-pinned `requirements.txt`) because
+  `backend.common.signals` loads `config/classifier.yaml`; the Dockerfile copies the new silver modules,
+  `backend/ingest/sql/` and `config/classifier.yaml`. `publish.py` is host-only (pyarrow/duckdb/pyiceberg/boto3) and
+  is not in the image.
+- Mounts (compose.ingest.yaml): `/manifests` read-only (WU4 manifest rows exported from the MinIO `raw` bucket by
+  `make silver-manifests`; the container holds no S3 credentials) and `/work` read-write (`geocode-cache.jsonl` in,
+  `geocode-requests.txt` out). The container has no internet route, so Census geocoding is a host step
+  (`make silver-geocode`) that fills the cache; the next `make silver-run` maps the answers. Unanswered addresses
+  are stored as `no_match` (null geometry) and listed as `geocode_pending`.
+- Tables: `silver.instruments` (MERGE INTO on `instrument_id`) and `silver.loans` (MERGE INTO on `loan_id`), Iceberg
+  format-version 2, copy-on-write. Loans are recomputed for the parcels touched by each MERGE (and the whole town
+  when its deed/discharge coverage flags flip). Stale instruments of a re-processed document are deleted.
+- Unification precedence when no two extractors agree (`backend/ingest/unify.py: EXTRACTOR_PRECEDENCE`, tested):
+  names/addresses `unstructured > docling > pymupdf`; money, dates, references, parcel `pymupdf > docling > unstructured`.
+- Publish layout: `versions/<snapshot_id>/{loans_list,loans_detail}.parquet` + a self-contained per-version
+  `manifest.json` (passes `validate_snapshot`), then the root `manifest.json` pointer (paths prefixed with the version
+  key) is written last. `make publish` targets `s3://snapshots/current`, the API's `SNAPSHOT_BASE`.
