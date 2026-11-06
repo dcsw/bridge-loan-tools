@@ -27,10 +27,10 @@ Where the PDFs come from (same as in tos-info.md):
 - **https://www.searchiqs.com/ctmad/** (Madison land records; index since 1974, images paid per the town page and our notes).
 - Owner/parcel cross-reference: https://www.madisonct.org/155/Assessor
 
-Steps match Mattapoisett: save the instrument PDF, place `data/drop/<sha256>.pdf` plus the matching
-`data/drop/<sha256>.json` manifest row (`town` = `madison`), run `make fetcher-ingest`. Needs the same
-not-yet-built `make manual-drop` helper (see `../mattapoisett-ma/recommendation.md`). Budget the per-page image fees before
-buying images for a batch.
+Steps are the same as for Mattapoisett (see `../mattapoisett-ma/recommendation.md`): save the instrument PDF, then
+`make manual-drop FILE=... URL="<ref>" TOWN=madison` (or `GAP=paid|blocked|failed` for one you could not get),
+then `make fetcher-ingest`.
+Budget the per-page image fees before buying images for a batch.
 
 ## What would change this recommendation
 

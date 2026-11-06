@@ -41,14 +41,14 @@ Steps:
 1. Search by hand in a normal browser and open each instrument; save or print the image to PDF. Free
    search is what the registry describes; any account-based printing is paid.
 2. Note the instrument's URL or book/page as the source reference.
-3. Put the PDF in the pipeline's drop directory as `data/drop/<sha256>.pdf` with a matching
-   `data/drop/<sha256>.json` manifest row (`doc_id` = sha256 of the file, `source_url`, `fetched_at`,
-   `town` = `mattapoisett`, `status` = `fetched`, `gap_reason` = null, `size_bytes`).
-4. Run `make fetcher-ingest`, then the rest of the pipeline.
-
-**Gap:** there is no helper that builds the sidecar JSON. Before relying on this path, add a small
-`make manual-drop FILE=... URL=... TOWN=mattapoisett` script (hash the file, write both files via the same
-`write_drop` code the fetcher uses). Estimated as a small task.
+3. Put it in the drop directory with the helper (hashes the file, checks it is a PDF, writes
+   `data/drop/<sha256>.pdf` plus the matching `<sha256>.json` manifest row, using the same code as the fetcher):
+   ```bash
+   make manual-drop FILE=~/Downloads/instrument.pdf URL="<instrument URL or book/page>" TOWN=mattapoisett
+   # a document you could not get (e.g. a paid image you did not buy), so coverage shows the gap:
+   make manual-drop GAP=paid URL="<reference>" TOWN=mattapoisett      # GAP=paid|blocked|failed
+   ```
+4. Run `make fetcher-ingest`, then the rest of the pipeline. Re-dropping the same bytes is a no-op.
 
 ## What would change this recommendation
 

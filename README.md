@@ -38,6 +38,7 @@ project's volumes.**
 make stack-up                          # MinIO, Postgres, Lakekeeper, API, KrakenD, gateway (127.0.0.1 only)
 make fetcher-run URLS=... TOWN=...     # isolated fetch network -> data/drop (live hosts need FETCHER_PORTAL_HOSTS;
                                        # the fixture flow needs the e2e profile: see tests/integration/pipeline.py)
+make manual-drop FILE=x.pdf URL=<ref> TOWN=<town>   # alternative to fetcher-run: a PDF you downloaded by hand
 make fetcher-ingest                    # data/drop -> MinIO raw store + manifest rows
 cp data/drop/ingested/*.pdf data/extract-in/ && make extract-all
 make ingest-run                        # bronze (+ quarantine)

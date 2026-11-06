@@ -31,9 +31,9 @@ Where the PDFs come from (same as in tos-info.md):
   document type = Mortgage, then Discharge).
 - Owner and parcel cross-reference: https://gis.vgsi.com/ryenh/ and https://www.town.rye.nh.us/assessing
 
-Steps are the same as for Mattapoisett: save the instrument PDF, then place `data/drop/<sha256>.pdf` and
-a matching `data/drop/<sha256>.json` manifest row (`town` = `rye`), then `make fetcher-ingest`. This needs the
-same not-yet-built `make manual-drop` helper (see `../mattapoisett-ma/recommendation.md`).
+Steps are the same as for Mattapoisett (see `../mattapoisett-ma/recommendation.md`): save the instrument PDF, then
+`make manual-drop FILE=... URL="<ref>" TOWN=rye` (or `GAP=paid|blocked|failed` for one you could not get),
+then `make fetcher-ingest`.
 
 ## What would change this recommendation
 
