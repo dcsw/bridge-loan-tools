@@ -9,16 +9,17 @@ not in Phase 1 or 2 anyway (the design sequences Rye after the Mattapoisett accu
 needs building now.
 
 Reasons:
-1. The registry's Disclaimer, Copy Fees and the Ava/Tapestry terms were not retrievable. Without them
-   there is no basis to automate.
+1. The Ava disclaimer says material may not be sold or given to third parties and that use of copies
+   "for profit or not" may lead to legal action. That is a reason to ask before storing and displaying
+   record contents in a tool, whether or not it is automated. Other terms pages were not retrievable.
 2. Ava is a vendor-hosted app (Fidlar). Its own terms and bot protection are unknown.
-3. Search is by name only, which makes a town-wide scrape impractical regardless of policy: you need an
+3. Search is by name only (owner names come from the town, e.g. VGSI/Assessing), which makes a town-wide scrape impractical regardless of policy: you need an
    owner name first (from VGSI or the assessor).
 
 ## What to do
 
-1. Open the registry **Disclaimer** page (linked from https://www.nhdeeds.org/rockingham-home/) in a
-   browser and read it, plus the Ava/Tapestry terms shown inside those apps. Record the result in `tos-info.md`.
+1. Read the full Ava disclaimer in a browser (https://www.nhdeeds.org/rockingham-county-other-nh-registry-list-2/)
+   and the registry Disclaimer page; record anything beyond the summary in `tos-info.md`.
 2. **Ask the registry** (Brentwood, NH; phone 603-642-5526 per the county site; Fidlar support is
    563-345-1283): is automated or bulk retrieval allowed, and is commercial use of the data permitted?
 3. Until answered, use manual drops.
